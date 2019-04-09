@@ -5,7 +5,7 @@ class WishList extends Component{
         super();
         this.state = {
             lista : [],
-            descricao: ""
+            descricao: "",
         }
         this.cadastrarDesejo = this.cadastrarDesejo.bind(this);
         this.atualizaDescricao = this.atualizaDescricao.bind(this);
@@ -30,7 +30,7 @@ class WishList extends Component{
         fetch('http://localhost:5000/api/Wish', 
             {
             method : 'POST',
-            body : JSON.stringify({ descricao: this.state.descricao}), 
+            body : JSON.stringify({ descricao: this.state.descricao, }), 
             header : {
                 "Content-Type" : "application/json"
             }}
@@ -52,29 +52,34 @@ class WishList extends Component{
     //RENDERIZAÇÃO DA PÁGINA
            render(){
                return(
-                   <section id="desejo">
-                    <div className="lista-desejos">
-                        <tbody>
-                            {
-                                this.state.lista.map(function(wishList){
-                                    return (
-                                        <tr key={wishList}>
-                                        <td key={wishList.descricao}></td>
-                                        <td key={wishList.data}></td>
-                                        </tr>
-                                    );
-                                })
-                            }
-                        </tbody>
-
-                        <form onSubmit={this.cadastrarDesejo} id="Cadastrar-desejo">
-                            <div className="descricao">
-                            <input type="text" value={this.state.descricao} onChange={this.atualizaDescricao} placeholder="Insira aqui seu desejo!"></input>
-                            <button>Cadastrar</button>
-                            </div>
-                            </form>
-                        </div>
-                   </section>
+                <div class="header">
+                <button>My Wishes</button>
+                <img src="Logo.png" alt="Logo da wish"/>
+                <button>Deslogar</button>
+            </div>
+            <section id="desejos">
+                <div class="descricao">
+                <form onSubmit={this.cadastrarDesejo} id="Cadastrar-desejo">
+                        <input type="text" value={this.state.descricao} onChange={this.atualizaDescricao} placeholder="Insira aqui seu desejo!"/>
+                        <button>Cadastrar</button>
+                    </form>
+                </div>
+                <div class="item">
+                <tbody class="grid grid-columns">
+                                               {
+                                                    this.state.lista.map(function(wishList){
+                                                        return ( 
+                                                            <tr key={wishList}>
+                                                            <div><td class="campo" key={wishList.nome}>Ricardo</td></div>
+                                                            <div><td class="campo" key={wishList.descricao}>Aqui está meu desejo</td></div>
+                                                            <div><td class="campo" key={wishList.data}>11/12/2017</td></div>
+                                                            </tr>
+                                                        );
+                                                    })
+                                                }
+                 </tbody>
+                </div>
+                </section>
                );
            }   
     }
