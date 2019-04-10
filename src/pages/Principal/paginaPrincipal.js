@@ -1,4 +1,8 @@
 import React, {Component} from 'react';
+import {Link} from 'react-router-dom';
+import '../../assets/css/paginaPrincipal.css';
+import Logo from '../../assets/img/Logo.png';
+
 
 class WishList extends Component{
     constructor(){
@@ -7,12 +11,12 @@ class WishList extends Component{
             lista : [],
             descricao: ""
         }
-        this.cadastrarDesejo = this.cadastrarDesejo.bind(this);
+        //this.cadastrarDesejo = this.cadastrarDesejo.bind(this);
         this.atualizaDescricao = this.atualizaDescricao.bind(this);
     }
     //Listar os desejos 
     listarDesejos(){
-        fetch('http://localhost:5000/api/wish')
+        fetch('http://localhost:5000/api/Wish')
         .then(resposta => resposta.json())
         .then(data => this.setState({lista: data}))
         .catch(erro => console.log(erro))
@@ -25,18 +29,21 @@ class WishList extends Component{
 
     //Cadastrar os desejos 
     cadastrarDesejo(event) {
-        // event.preventDefault();
+        event.preventDefault();
 
+        localStorage.getItem('usuario-wishList');
+        
         fetch('http://localhost:5000/api/Wish', 
             {
-            method : 'POST',
-            body : JSON.stringify({ descricao: this.state.descricao}), 
-            header : {
-                "Content-Type" : "application/json"
+                method : 'POST',
+                body : JSON.stringify({ descwish: this.state.descricao }), 
+                headers : {
+                    "Content-Type" : "application/json", 
+                    "Authorization" : 'usuario-wishList'          
             }}
             )
             .then(resposta => console.log(resposta))
-            .then(this.cadastrarDesejo())
+            .then(this.listarDesejos())
             .catch(erro => console.log(erro))
            }
     
@@ -44,37 +51,42 @@ class WishList extends Component{
     atualizaDescricao(event){
         this.setState({descricao : event.target.value});
     }
-
-    desejosMaisRecentes(){
-            
-    }
     
     //RENDERIZAÇÃO DA PÁGINA
            render(){
                return(
-                   <section id="desejo">
-                    <div className="lista-desejos">
-                        <tbody>
-                            {
-                                this.state.lista.map(function(wishList){
-                                    return (
-                                        <tr key={wishList}>
-                                        <td key={wishList.descricao}></td>
-                                        <td key={wishList.data}></td>
-                                        </tr>
-                                    );
-                                })
-                            }
-                        </tbody>
-
-                        <form onSubmit={this.cadastrarDesejo} id="Cadastrar-desejo">
-                            <div className="descricao">
-                            <input type="text" value={this.state.descricao} onChange={this.atualizaDescricao} placeholder="Insira aqui seu desejo!"></input>
-                            <button>Cadastrar</button>
-                            </div>
-                            </form>
+                <div>
+                <div className="header">
+                    <button>My Wishes</button>
+                        <img src={Logo} alt="Logo da wish"/>
+                     <button><Link to="/login">Deslogar</Link></button>
+                </div>
+                <div>
+                     <section id="desejos">
+                <div className="descricao">
+                <form onSubmit={this.cadastrarDesejo.bind(this)} id="Cadastrar-desejo">
+                        <input type="text" value={this.state.descricao} onChange={this.atualizaDescricao} placeholder="Insira aqui seu desejo!"/>
+                        <button type="submit">Cadastrar</button>
+                    </form>
+                </div>
+                    <div className="item">
+                          <tbody className="grid grid-columns">
+                                {
+                             this.state.lista.map(function(wishList){
+                                  return ( 
+                                      <tr key={wishList}>
+                                      <td >{wishList.nome}</td>
+                                      <td >{wishList.descricao}</td>
+                                      <td >{wishList.data}</td>
+                                       </tr>
+                                         );
+                                    })
+                               }
+                         </tbody>
                         </div>
-                   </section>
+                </section>
+                </div>
+                </div>
                );
            }   
     }
