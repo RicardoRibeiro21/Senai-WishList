@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Axios from 'axios';
 import '../../assets/css/login.css';
 import Logo from '../../assets/img/Logo.png';
-
+export const getToken = () => localStorage.getItem("usuario-wishList");
 class Login extends Component {
   constructor(){
     super();
@@ -34,7 +34,7 @@ class Login extends Component {
       console.log(data);
 
       //Aqui inserir o token e o data.data.token para armazenar as informações trazidas do token
-      localStorage.setItem("usuario-wishList", data.data.token);
+     localStorage.setItem("usuario-wishList", data.data.token);
 
       this.props.history.push("/paginaPrincipal");
       
